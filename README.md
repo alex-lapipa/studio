@@ -65,6 +65,13 @@ Auth: set `SUPABASE_ANON_KEY` in the environment (see `.env.example`).
 - **Confidence-flagged research** — dossiers mark every claim [certain]/[reported]/[community-sourced]; unverifiable facts are listed as unverified, never guessed.
 - **Corpus is the rulebook** — the KB grounds every configuration answer; next tier is a Studio MCP server that uses it to operate the rig (MIDI routing, SysEx backup, generative sessions via the MRCC).
 
+## Companion repos (forks under alex-lapipa)
+
+- **[supercollider](https://github.com/alex-lapipa/supercollider)** — fork of the SuperCollider audio synthesis language. Runs on the studio Mac; the fork exists for pinning/patching, not for installation (install the release app from supercollider.github.io).
+- **[Modality-toolkit](https://github.com/alex-lapipa/Modality-toolkit)** — fork of the SuperCollider Quark for mapping MIDI/HID controllers to synthesis parameters. Install inside SuperCollider with `Quarks.install("Modality-toolkit")`. This fork is where studio-specific controller descriptions (MiniLab 3, MRCC-routed gear) will live when we customise mappings.
+
+Both are public upstream; the forks give this project a writable copy via the vault-backed `gh-sync` function.
+
 ## Roadmap
 
 - [ ] English TD-3-MO QSG + Devil Fish manual into USER MANUALS bucket
@@ -72,4 +79,5 @@ Auth: set `SUPABASE_ANON_KEY` in the environment (see `.env.example`).
 - [ ] Studio MCP server v0 (Mac-side: list_midi_ports, send_cc/sysex, clock) — MRCC-first
 - [ ] `patches` table: own patches as structured data (knobs jsonb, patchbay routes, audio refs)
 - [ ] Live search artifact / dashboard
+- [ ] SuperCollider + Modality: generative sessions driving the rig via MRCC (SC MIDI out -> MRCC routes); studio controller descriptions committed to the Modality-toolkit fork
 - [ ] Optional: swap embeddings to OpenAI text-embedding-3-small if retrieval fuzzes at scale
