@@ -1,0 +1,11 @@
+# secrets & local state — never commit
+.anon
+.env
+*.key
+# corpus working files (copyrighted manuals stay in Supabase Storage only)
+pdfs/
+text/
+chunks.json
+state.json
+__pycache__/
+.DS_Store
