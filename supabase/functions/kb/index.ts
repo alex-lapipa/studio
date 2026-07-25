@@ -7,12 +7,21 @@ const supabase = createClient(
 
 const session = new Supabase.ai.Session("gte-small");
 
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
 async function embed(text: string): Promise<number[]> {
   const out = await session.run(text, { mean_pool: true, normalize: true });
   return out as number[];
 }
 
 Deno.serve(async (req: Request) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: CORS });
+  }
   try {
     const body = await req.json();
     const action = body.action;
@@ -70,6 +79,6 @@ Deno.serve(async (req: Request) => {
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...CORS },
   });
 }
