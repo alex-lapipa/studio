@@ -28,6 +28,16 @@ Supabase project klbzvbwudekstddlgnjy
     └── github_pat_studio_kb  ← fine-grained PAT, this repo only
 ```
 
+## GitHub App (registered 2026-07-24)
+
+| Field | Value |
+|---|---|
+| Owner | @alex-lapipa |
+| App ID | 4388277 |
+| Client ID | Iv23lifsIPuKgg3AkIIb |
+| Purpose | successor to the vault PAT for `gh-sync` — short-lived installation tokens instead of a long-lived PAT |
+| Status | **not yet active** — needs: (1) private key generated + stored in Vault as `github_app_studio_key`, (2) app installed on `alex-lapipa/studio` (+ forks if wanted) |
+
 ## Deployment
 
 **Vercel project:** `prj_qhdWNQ96bitwujT7iK3O6ksdQKy5` (added 2026-07-24) — target for the live KB search dashboard / studio front-end. Deploys from this repo on merge to `main` once wired.
