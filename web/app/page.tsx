@@ -10,7 +10,7 @@ const SUPABASE_ANON =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsYnp2Ynd1ZGVrc3RkZGxnbmp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MTA5NTksImV4cCI6MjEwMDQ4Njk1OX0.RMmiWyiYA0f26JIcK8VgfD_gdJNesjC2UH3ero4TrEY";
 
-const STUDIO_LOGIN_EMAIL = "studio@miramonte.io"; // fixed internal account; password is the shared gate
+const STUDIO_LOGIN_EMAIL = "alex@rmtv.io"; // fixed studio account; password is the shared gate
 
 let _sb: SupabaseClient | null = null;
 function sb(): SupabaseClient {
