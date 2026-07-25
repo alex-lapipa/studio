@@ -25,7 +25,8 @@ Supabase project klbzvbwudekstddlgnjy
 │   ├── kb                    ← search / ingest_chunks / sign  (embeds with Supabase.ai gte-small)
 │   └── gh-sync               ← GitHub sync; reads PAT from Vault server-side (token never leaves Supabase)
 └── Vault
-    └── github_pat_studio_kb  ← fine-grained PAT, this repo only
+    ├── github_app_studio_key ← GitHub App private key (primary auth for gh-sync)
+    └── github_pat_studio_kb  ← fine-grained PAT (fallback)
 ```
 
 ## GitHub App (registered 2026-07-24)
@@ -36,7 +37,7 @@ Supabase project klbzvbwudekstddlgnjy
 | App ID | 4388277 |
 | Client ID | Iv23lifsIPuKgg3AkIIb |
 | Purpose | successor to the vault PAT for `gh-sync` — short-lived installation tokens instead of a long-lived PAT |
-| Status | **not yet active** — needs: (1) private key generated + stored in Vault as `github_app_studio_key`, (2) app installed on `alex-lapipa/studio` (+ forks if wanted) |
+| Status | **ACTIVE** (2026-07-25) — installation 148845330; `gh-sync` mints short-lived installation tokens; vault PAT retained as automatic fallback |
 
 ## Deployment
 
