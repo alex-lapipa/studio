@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { createClient, SupabaseClient, Session } from "@supabase/supabase-js";
 import { StudioOverview } from "../components/StudioOverview";
 import { SystemPanel } from "../components/SystemPanel";
+import { RigPanel } from "../components/RigPanel";
+import { EvidenceBrain } from "../components/EvidenceBrain";
 
 // Anon key is public-by-design (shipped in every client bundle); RLS + password gate protect the data.
 const SUPABASE_URL =
@@ -80,7 +82,7 @@ function Login() {
 }
 
 function Studio() {
-  const [tab, setTab] = useState<"overview" | "brain" | "midi" | "docs" | "system">("overview");
+  const [tab, setTab] = useState<"overview" | "rig" | "brain" | "midi" | "docs" | "system">("overview");
   return (
     <div className="shell">
       <header className="top">
@@ -89,78 +91,19 @@ function Studio() {
       </header>
       <nav className="tabs">
         <button className={tab === "overview" ? "on" : ""} onClick={() => setTab("overview")}>Studio Overview</button>
+        <button className={tab === "rig" ? "on" : ""} onClick={() => setTab("rig")}>Rig</button>
         <button className={tab === "brain" ? "on" : ""} onClick={() => setTab("brain")}>Studio Brain</button>
         <button className={tab === "midi" ? "on" : ""} onClick={() => setTab("midi")}>MIDI Console</button>
         <button className={tab === "docs" ? "on" : ""} onClick={() => setTab("docs")}>Docs</button>
         <button className={tab === "system" ? "on" : ""} onClick={() => setTab("system")}>System</button>
       </nav>
       {tab === "overview" && <StudioOverview client={sb()} />}
-      {tab === "brain" && <Brain />}
+      {tab === "rig" && <RigPanel client={sb()} />}
+      {tab === "brain" && <EvidenceBrain client={sb()} url={SUPABASE_URL} anon={SUPABASE_ANON} />}
       {tab === "midi" && <MidiConsole />}
       {tab === "docs" && <Docs />}
       {tab === "system" && <SystemPanel client={sb()} />}
     </div>
-  );
-}
-
-// ————————————————— STUDIO BRAIN —————————————————
-function Brain() {
-  const [q, setQ] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-  const [gear, setGear] = useState<any[]>([]);
-  const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    sb().from("gear").select("*").order("make").then(({ data }) => setGear(data || []));
-  }, []);
-
-  async function search(e: React.FormEvent) {
-    e.preventDefault(); if (!q.trim()) return;
-    setBusy(true);
-    try {
-      const r = await fetch(`${SUPABASE_URL}/functions/v1/kb`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${SUPABASE_ANON}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "search", query: q, match_count: 8 }),
-      });
-      const j = await r.json();
-      setResults(j.results || []);
-    } finally { setBusy(false); }
-  }
-
-  return (
-    <>
-      <div className="card">
-        <h3>Ask the corpus — evidence from manuals, research and studio state</h3>
-        <form onSubmit={search} className="row">
-          <input type="text" value={q} onChange={(e) => setQ(e.target.value)}
-            placeholder='e.g. "sync DFAM to Mother-32" · "Tanzbär CC channel" · "TD-3-MO accent velocity"' style={{ flex: 1 }} />
-          <button className="primary" disabled={busy}>{busy ? "…" : "Search"}</button>
-        </form>
-        <div style={{ marginTop: 14 }}>
-          {results.map((r) => (
-            <div className="result" key={r.chunk_id}>
-              <div className="meta">{r.gear} · {r.document_title}{r.page_start ? ` · p${r.page_start}` : ""}{r.section ? ` · ${r.section}` : ""}</div>
-              <p>{r.content.length > 700 ? r.content.slice(0, 700) + "…" : r.content}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="card">
-        <h3>The rig — {gear.length} instruments</h3>
-        <div className="grid">
-          {gear.map((g) => (
-            <div className="card gear-card" key={g.id} style={{ margin: 0 }}>
-              <span className="cat">{g.category}</span>
-              <h4>{g.make} {g.model}</h4>
-              {g.role_in_studio && <div className="field"><b>Role:</b> {g.role_in_studio}</div>}
-              {g.midi_channels && <div className="field"><b>MIDI:</b> {g.midi_channels}</div>}
-              {g.sync_capabilities && <div className="field"><b>Sync:</b> {g.sync_capabilities}</div>}
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
   );
 }
 

@@ -103,3 +103,15 @@ a { color: var(--accent2); }
 .observation:first-child { border-top:0; }.observation strong { text-transform:capitalize; font-size:12px; }.observation p,.observation time { color:var(--dim); font-size:11px; line-height:1.4; }
 .observation time { text-align:right; }
 @media (max-width:800px) { .hero-panel { align-items:flex-start; flex-direction:column; }.metrics { grid-template-columns:repeat(2,1fr); }.topology-grid { grid-template-columns:1fr; }.topology-arrow { transform:rotate(90deg); padding:0; }.split-grid { grid-template-columns:1fr; }.observation { grid-template-columns:1fr; }.observation time { text-align:left; } }
+.rig-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:12px; }
+.rig-card { margin:0; }
+.rig-card-head { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; }
+.rig-card-head h3 { margin:5px 0 0; color:var(--text); font-size:16px; text-transform:none; letter-spacing:0; }
+.rig-role { color:var(--dim); font-size:12px; line-height:1.45; margin:10px 0; }
+.rig-facts { display:grid; gap:7px; border-top:1px solid var(--border); padding-top:9px; }
+.rig-facts div { display:grid; grid-template-columns:70px 1fr; gap:10px; font-size:11px; }
+.rig-facts span { color:var(--dim); text-transform:uppercase; letter-spacing:.6px; }
+.rig-facts b { font-weight:500; line-height:1.4; }
+.source-strip { display:flex; flex-wrap:wrap; gap:4px; margin-top:10px; }
+@media(max-width:650px){ .rig-grid { grid-template-columns:1fr; } }
+.score { margin-top:7px; color:var(--dim); font:10px/1 var(--mono); }
