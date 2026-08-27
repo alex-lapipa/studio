@@ -1,0 +1,22 @@
+[
+  {"id":"mrcc_pc_port","query":"How does the Mac connect to the MRCC and how many virtual MIDI ports are exposed?","expected_sources":["Conductive Labs MRCC Manual"],"topic":"midi","status":"needs_manual_revalidation"},
+  {"id":"dfam_midi","query":"Can DFAM receive MIDI directly?","expected_sources":["Moog DFAM Manual"],"topic":"midi"},
+  {"id":"dfam_m32_sync","query":"How do I synchronize DFAM with Mother-32?","expected_sources":["Syncing DFAM with Mother-32 (official guide)","Moog DFAM Manual","Moog Mother-32 User's Manual"],"topic":"sync"},
+  {"id":"tanzbar_channels","query":"What MIDI channels does the Tanzbär use for drums, CV1 and CV2?","expected_sources":["MFB Tanzbär Manual"],"topic":"midi"},
+  {"id":"tanzbar_cc","query":"Which MIDI channel receives Tanzbär CC control?","expected_sources":["MFB Tanzbär Manual","MFB Tanzbär Dossier"],"topic":"midi"},
+  {"id":"td3mo_cutoff","query":"Which MIDI CC controls TD-3-MO cutoff?","expected_sources":["Behringer TD-3-MO Verified Reference Dossier"],"topic":"midi"},
+  {"id":"xone_midi","query":"Is the Xone:92 a MIDI clock or synchronization device?","expected_sources":["Allen & Heath Xone:92 LE User Guide"],"topic":"audio"},
+  {"id":"electribe_channels","query":"How are Electribe parts mapped to MIDI channels?","expected_sources":["Korg Electribe 2 / 2S Owner's Manual (EN)"],"topic":"midi"},
+  {"id":"mother32_patch","query":"What patch points can be used for clocking Mother-32?","expected_sources":["Moog Mother-32 User's Manual"],"topic":"cv_sync"},
+  {"id":"subharmonicon_sync","query":"What synchronization inputs are available on Subharmonicon?","expected_sources":["Moog Subharmonicon Manual"],"topic":"cv_sync"},
+  {"id":"unitor_model_difference","query":"Which synchronization features are specific to Unitor8 Mk II and not AMT8?","expected_sources":["Emagic Unitor8 Mk II / AMT8 User Manual v1.1"],"topic":"midi"},
+  {"id":"orchid_channels","query":"What are Orchid firmware 4.1 default MIDI channels?","expected_sources":["Telepathic Instruments Orchid Operation Manual v4.1"],"topic":"midi"},
+  {"id":"minilab_io","query":"What physical MIDI and pedal connections does MiniLab 3 provide?","expected_sources":["Arturia MiniLab 3 Manual"],"topic":"controller"},
+  {"id":"theremini_cv","query":"What can the Theremini CV output be used for?","expected_sources":["Moog Theremini Manual"],"topic":"cv"},
+  {"id":"studio_mrcc_role","query":"What device is the designated centre of MIDI routing in the studio?","expected_sources":["Studio Mac ↔ MRCC MIDI Configuration"],"topic":"studio_state"},
+  {"id":"mac_audio_rate_split","query":"What sample-rate mismatch was observed between the studio default input and output?","expected_sources":["Studio Source of Truth 2026-08-27"],"topic":"live_state","status":"pending_source_ingest"},
+  {"id":"mac_logic_version","query":"What version of Logic Pro was observed on the core studio Mac?","expected_sources":["Studio Source of Truth 2026-08-27"],"topic":"software","status":"pending_source_ingest"},
+  {"id":"mac_bitwig_version","query":"What version of Bitwig Studio was observed on the core studio Mac?","expected_sources":["Studio Source of Truth 2026-08-27"],"topic":"software","status":"pending_source_ingest"},
+  {"id":"plugin_inventory","query":"How many AU, VST3 and VST2 plugins were observed on the Mac?","expected_sources":["Studio Source of Truth 2026-08-27"],"topic":"software","status":"pending_source_ingest"},
+  {"id":"mrcc_live_serial","query":"What serial number was observed on the live MRCC?","expected_sources":["Studio Source of Truth 2026-08-27"],"topic":"live_state","status":"pending_source_ingest"}
+]
