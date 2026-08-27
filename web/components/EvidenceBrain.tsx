@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { loadStudioState, type StudioState } from "../lib/studio";
 
 type Hit = {
   chunk_id: number; document_id: string; document_title: string;
@@ -14,8 +15,26 @@ export function EvidenceBrain({ client, url, anon }: { client: SupabaseClient; u
   const [results, setResults] = useState<Hit[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [state, setState] = useState<StudioState | null>(null);
+  useEffect(() => { loadStudioState(client).then(setState).catch(() => undefined); }, [client]);
 
   const sources = useMemo(() => [...new Set(results.map((r) => r.document_title))], [results]);
+
+  const structured = useMemo(() => {
+    if (!state || !q.trim()) return [];
+    const terms = q.toLowerCase().split(/\s+/).filter((t) => t.length > 2);
+    const rows: Array<{type:string; title:string; detail:string}> = [];
+    const add = (type:string, title:string, detail:string) => {
+      const hay = `${title} ${detail}`.toLowerCase();
+      if (terms.some((t) => hay.includes(t))) rows.push({ type, title, detail });
+    };
+    state.gear.forEach((g) => add("gear", `${g.make} ${g.model}`, `${g.role_in_studio || ""} ${g.midi_channels || ""} ${g.sync_capabilities || ""}`));
+    state.software.forEach((s) => add("software", s.name, `${s.version || ""} ${s.category || ""}`));
+    state.plugins.forEach((p) => add("plugin", p.name, `${p.vendor || ""} ${p.version || ""} ${p.format || ""}`));
+    state.endpoints.forEach((e) => add("endpoint", e.name, `${e.endpoint_type || ""} ${e.transport || ""} ${e.sample_rate_hz || ""}`));
+    state.observations.forEach((o) => add("observation", o.fact_key, `${o.source_ref || ""} ${JSON.stringify(o.fact_value || {})}`));
+    return rows.slice(0, 12);
+  }, [state, q]);
 
   async function search(e: React.FormEvent) {
     e.preventDefault(); if (!q.trim()) return;
@@ -49,6 +68,11 @@ export function EvidenceBrain({ client, url, anon }: { client: SupabaseClient; u
       {error && <div className="callout warn-callout">{error}</div>}
       {!busy && q && !error && results.length === 0 && <div className="callout">No supporting evidence found for this query.</div>}
     </section>
+    {structured.length > 0 && <section className="card">
+      <div className="section-head"><div><div className="eyebrow">STRUCTURED STATE</div><h3>{structured.length} direct matches</h3></div><span className="tag">live tables</span></div>
+      <div className="structured-list">{structured.map((m, i) => <div className="structured-row" key={`${m.type}-${m.title}-${i}`}><span className="pill">{m.type}</span><div><strong>{m.title}</strong><p>{m.detail}</p></div></div>)}</div>
+    </section>}
+
     {results.length > 0 && <section className="card">
       <div className="section-head">
         <div><div className="eyebrow">EVIDENCE BUNDLE</div><h3>{results.length} chunks from {sources.length} sources</h3></div>
