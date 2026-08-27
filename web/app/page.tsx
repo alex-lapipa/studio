@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createClient, SupabaseClient, Session } from "@supabase/supabase-js";
+import { StudioOverview } from "../components/StudioOverview";
+import { SystemPanel } from "../components/SystemPanel";
 
 // Anon key is public-by-design (shipped in every client bundle); RLS + password gate protect the data.
 const SUPABASE_URL =
@@ -78,7 +80,7 @@ function Login() {
 }
 
 function Studio() {
-  const [tab, setTab] = useState<"brain" | "midi" | "docs">("brain");
+  const [tab, setTab] = useState<"overview" | "brain" | "midi" | "docs" | "system">("overview");
   return (
     <div className="shell">
       <header className="top">
@@ -86,13 +88,17 @@ function Studio() {
         <span className="tag">MRCC-centred · KB {new Date().getFullYear()} · <a style={{cursor:"pointer"}} onClick={() => sb().auth.signOut()}>log out</a></span>
       </header>
       <nav className="tabs">
+        <button className={tab === "overview" ? "on" : ""} onClick={() => setTab("overview")}>Studio Overview</button>
         <button className={tab === "brain" ? "on" : ""} onClick={() => setTab("brain")}>Studio Brain</button>
         <button className={tab === "midi" ? "on" : ""} onClick={() => setTab("midi")}>MIDI Console</button>
         <button className={tab === "docs" ? "on" : ""} onClick={() => setTab("docs")}>Docs</button>
+        <button className={tab === "system" ? "on" : ""} onClick={() => setTab("system")}>System</button>
       </nav>
+      {tab === "overview" && <StudioOverview client={sb()} />}
       {tab === "brain" && <Brain />}
       {tab === "midi" && <MidiConsole />}
       {tab === "docs" && <Docs />}
+      {tab === "system" && <SystemPanel client={sb()} />}
     </div>
   );
 }
@@ -125,7 +131,7 @@ function Brain() {
   return (
     <>
       <div className="card">
-        <h3>Ask the corpus — 21 documents, 700+ chunks, cited</h3>
+        <h3>Ask the corpus — evidence from manuals, research and studio state</h3>
         <form onSubmit={search} className="row">
           <input type="text" value={q} onChange={(e) => setQ(e.target.value)}
             placeholder='e.g. "sync DFAM to Mother-32" · "Tanzbär CC channel" · "TD-3-MO accent velocity"' style={{ flex: 1 }} />
