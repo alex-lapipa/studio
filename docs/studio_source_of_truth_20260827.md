@@ -34,3 +34,21 @@ The additive v2 schema models computers, software, plugins, endpoints, connectio
 4. Run retrieval regression/benchmark queries and inspect provenance/page references.
 5. Record live changes as dated observations; update this baseline only when a new verified state supersedes it.
 6. Commit code/docs/migrations on a branch and merge through review; keep database changes additive/reversible.
+
+
+## Verified live Mac state — 2026-08-27
+
+- Core computer: Mac mini Mac16,11, Apple M4 Pro, 64 GB, macOS 26.2 (25C56).
+- Logic Pro 12.3.1 and Bitwig Studio 6.0.11 were observed from installed application bundles.
+- Installed plugin bundle counts: 37 AU components, 36 VST3 bundles, 29 VST2 bundles. Counts do not imply successful validation.
+- Default audio input observed: M-AUDIO Uber Mic at 48 kHz. Default/system output: Scarlett 2i2 USB at 44.1 kHz. This rate split should be reconciled before a critical recording session; no automatic change was made.
+- MRCC is physically present on USB and owned by macOS MIDIServer. This proves USB presence, not the downstream physical MIDI routing.
+- Physical synth/mixer/CV cabling remains deliberately unknown until directly observed.
+
+## Corpus integrity note
+
+New ingestion must use `pipeline/chunk_v2.py` and remain <=1900 characters per chunk. The 2026-08-27 Source-of-Truth ingestion satisfies this (2 chunks, max 1717). The legacy corpus still contains 73 pre-v2 chunks over 1900 characters across 14 documents; they remain readable and vectorized but should be superseded by bounded re-ingestion when source PDFs are available, not destructively rewritten.
+
+## Retrieval baseline
+
+After Source-of-Truth ingestion, the practical regression suite returned 13/15 expected-source recall@8 (86.7%). Failures were TD-3-MO cutoff and studio-MRCC-role queries. Treat these as targeted retrieval/source-ingestion work, not reasons to loosen evidence requirements.
