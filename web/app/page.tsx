@@ -6,6 +6,7 @@ import { StudioOverview } from "../components/StudioOverview";
 import { SystemPanel } from "../components/SystemPanel";
 import { RigPanel } from "../components/RigPanel";
 import { EvidenceBrain } from "../components/EvidenceBrain";
+import { SoftwarePanel } from "../components/SoftwarePanel";
 
 // Anon key is public-by-design (shipped in every client bundle); RLS + password gate protect the data.
 const SUPABASE_URL =
@@ -82,7 +83,7 @@ function Login() {
 }
 
 function Studio() {
-  const [tab, setTab] = useState<"overview" | "rig" | "brain" | "midi" | "docs" | "system">("overview");
+  const [tab, setTab] = useState<"overview" | "rig" | "software" | "brain" | "midi" | "docs" | "system">("overview");
   return (
     <div className="shell">
       <header className="top">
@@ -92,6 +93,7 @@ function Studio() {
       <nav className="tabs">
         <button className={tab === "overview" ? "on" : ""} onClick={() => setTab("overview")}>Studio Overview</button>
         <button className={tab === "rig" ? "on" : ""} onClick={() => setTab("rig")}>Rig</button>
+        <button className={tab === "software" ? "on" : ""} onClick={() => setTab("software")}>Mac & Software</button>
         <button className={tab === "brain" ? "on" : ""} onClick={() => setTab("brain")}>Studio Brain</button>
         <button className={tab === "midi" ? "on" : ""} onClick={() => setTab("midi")}>MIDI Console</button>
         <button className={tab === "docs" ? "on" : ""} onClick={() => setTab("docs")}>Docs</button>
@@ -99,6 +101,7 @@ function Studio() {
       </nav>
       {tab === "overview" && <StudioOverview client={sb()} />}
       {tab === "rig" && <RigPanel client={sb()} />}
+      {tab === "software" && <SoftwarePanel client={sb()} />}
       {tab === "brain" && <EvidenceBrain client={sb()} url={SUPABASE_URL} anon={SUPABASE_ANON} />}
       {tab === "midi" && <MidiConsole />}
       {tab === "docs" && <Docs />}
