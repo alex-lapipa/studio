@@ -57,3 +57,13 @@ Source-of-Truth v2 tables are live and verified. Migration `20260827003000_studi
 3. Transfer and ingest remaining manufacturer manuals when source bytes are accessible.
 4. Re-ingest the 73 legacy oversized chunks with bounded v2 chunking and benchmark before/after.
 5. Grow practical retrieval tests around routing, sync, CV, audio, DAW integration and troubleshooting.
+
+## Lyria RealTime update — 2026-08-30
+
+- **Observed:** `GEMINI_API_KEY` was present in the user's interactive Terminal shell.
+- **Observed:** `google-genai` 2.20.0 using `models/lyria-realtime-exp` with API version `v1beta` reached the Live Music WebSocket path but the handshake returned HTTP 404.
+- **Observed:** a direct official-SDK connectivity test using API version `v1alpha` printed `LYRIA_CONNECTED`.
+- **Configured:** the local `generative/` Lyria provider now selects `v1alpha`; this is based on observed connectivity, while preserving Google's current `v1beta` vs `v1alpha` documentation inconsistency.
+- **Observed:** after the `v1alpha` change, 10/10 local tests passed; `uv lock --check`, CLI help, and Core Audio device enumeration also passed. The remote control process did not inherit the interactive Terminal API key, so end-to-end streamed PCM playback remains unobserved from this channel.
+- **Planned:** from the authenticated interactive Terminal shell, run the full CLI against explicit Scarlett 2i2 output to verify streamed PCM, transport, buffering and clean shutdown.
+- **Unknown:** downstream MRCC routes remain unobserved; no MIDI route is to be inferred from USB visibility alone.
