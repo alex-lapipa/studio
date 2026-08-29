@@ -32,7 +32,7 @@ MIDI planned-channel tests come from structured gear state and remain labelled a
 - Chunker unit tests: 5/5 PASS
 - Python compile checks: PASS
 - Frontend TypeScript: PASS
-- Next.js 15.5.21 production build: PASS
+- Next.js 16.3.3 production build: PASS
 - GitHub Actions latest push + PR runs: PASS
 - Null embeddings: 0
 - Null FTS: 0
@@ -67,3 +67,12 @@ Source-of-Truth v2 tables are live and verified. Migration `20260827003000_studi
 - **Observed:** after the `v1alpha` change, 10/10 local tests passed; `uv lock --check`, CLI help, and Core Audio device enumeration also passed. The remote control process did not inherit the interactive Terminal API key, so end-to-end streamed PCM playback remains unobserved from this channel.
 - **Planned:** from the authenticated interactive Terminal shell, run the full CLI against explicit Scarlett 2i2 output to verify streamed PCM, transport, buffering and clean shutdown.
 - **Unknown:** downstream MRCC routes remain unobserved; no MIDI route is to be inferred from USB visibility alone.
+
+## PR #1 readiness review — 2026-08-30
+
+- **Observed:** PR #1 remained open, draft, mergeable, with no submitted reviews or unresolved review threads; GitHub Actions `studio-ci` run #12 passed and the Vercel preview reported Ready.
+- **Observed:** a clean local verification passed Python chunker tests (5/5), Python compile checks, Lyria tests (10/10), `uv lock --check`, frontend typecheck, and production build.
+- **Observed:** `npm audit` on Next.js 15.5.21 reported 3 high-severity transitive vulnerabilities.
+- **Configured:** frontend upgraded to Next.js 16.3.3, which brought patched PostCSS 8.5.23 and Sharp 0.35.4; local `npm audit --audit-level=high` then reported 0 vulnerabilities.
+- **Configured:** CI now runs `npm audit --audit-level=high` after `npm ci` so high-severity dependency regressions block future merges.
+- **Observed:** Next.js 16.3.3 typecheck and production build pass on the studio Mac after the upgrade.
