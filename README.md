@@ -4,7 +4,7 @@ Knowledge base, RAG pipeline and (soon) intelligent management tooling for a har
 
 ## The studio
 
-**Technical centre:** Conductive Labs MRCC (6-in/12-out MIDI router, 4× USB host).
+**Technical centre:** Conductive Labs MRCC (11×17 physical routable ports; 39×34 total ports; 4× USB host).
 **Signature sound:** MFB Tanzbär analog drum computer (Manfred Fricke Berlin, 2013).
 **Core sound instruments:** Moog Subsequent 37 · Moog DFAM · Moog Mother-32 · Moog Subharmonicon · MAM MB33 + Behringer TD-3-MO (acid pair).
 **Also:** Moog Theremini · Korg Electribe 2/2S · Arturia MiniLab 3 · Allen & Heath Xone:92 LE (mix hub).
