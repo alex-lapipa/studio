@@ -15,7 +15,7 @@ API_VERSION = "v1alpha"
 class LyriaProvider:
     def __init__(self, api_key: str) -> None:
         if not api_key:
-            raise ValueError("GEMINI_API_KEY is required")
+            raise ValueError("A Gemini API key is required")
         self._client = genai.Client(api_key=api_key, http_options={"api_version": API_VERSION})
         self._session_cm = None
         self._session = None

@@ -81,6 +81,16 @@ async def _readline(prompt: str, shutdown: asyncio.Event) -> str | None:
         shutdown_task.cancel()
 
 
+def _api_key_from_environment() -> str:
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    if not api_key:
+        raise SystemExit(
+            "GEMINI_API_KEY or GOOGLE_API_KEY is not set. Create a Gemini API key with "
+            "Lyria RealTime access; do not place it in Git."
+        )
+    return api_key
+
+
 def _status_json(provider: LyriaProvider, audio: CoreAudioOutput) -> str:
     provider_status = provider.status_snapshot()
     provider_status["config"] = asdict(provider.config)
@@ -88,12 +98,7 @@ def _status_json(provider: LyriaProvider, audio: CoreAudioOutput) -> str:
 
 
 async def _run(args: argparse.Namespace) -> None:
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        raise SystemExit(
-            "GEMINI_API_KEY is not set. Create a Gemini API key with Lyria RealTime access; "
-            "do not place it in Git."
-        )
+    api_key = _api_key_from_environment()
 
     config = MusicConfig(
         guidance=args.guidance,
