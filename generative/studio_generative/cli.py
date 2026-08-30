@@ -13,6 +13,8 @@ import sys
 from .audio.output import CoreAudioOutput, list_output_devices
 from .control import apply_config_value
 from .lyria.provider import LyriaProvider
+from .mappings.minilab import map_cc
+from .midi.coremidi import receive_cc
 from .model import MusicConfig, WeightedPrompt
 
 
@@ -44,6 +46,8 @@ def _parser() -> argparse.ArgumentParser:
     run.add_argument("--mute-bass", action="store_true")
     run.add_argument("--mute-drums", action="store_true")
     run.add_argument("--only-bass-and-drums", action="store_true")
+    run.add_argument("--midi-source-uid", type=int, help="receive-only CoreMIDI source UID")
+    run.add_argument("--midi-channel", type=int, default=1, help="CoreMIDI input channel, 1..16")
     return parser
 
 
@@ -87,6 +91,16 @@ def _status_json(provider: LyriaProvider, audio: CoreAudioOutput) -> str:
     return json.dumps({"provider": provider_status, "audio": audio.status_snapshot()}, indent=2, sort_keys=True)
 
 
+async def _midi_control_loop(provider: LyriaProvider, config: MusicConfig, source_uid: int, channel: int) -> None:
+    async for event in receive_cc(source_uid, channel):
+        mapped = map_cc(event.cc, event.value)
+        if mapped is None:
+            continue
+        field, value = mapped
+        config = await apply_config_value(provider, config, field, str(value))
+        print(f"\n[midi] cc={event.cc} {field}={value:.3f}")
+
+
 async def _run(args: argparse.Namespace) -> None:
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
@@ -126,6 +140,13 @@ async def _run(args: argparse.Namespace) -> None:
         await provider.connect(audio.push, status)
         await provider.set_prompts(args.prompt)
         await provider.set_config(config)
+        midi_task = None
+        if args.midi_source_uid is not None:
+            midi_task = asyncio.create_task(
+                _midi_control_loop(provider, config, args.midi_source_uid, args.midi_channel),
+                name="coremidi-control",
+            )
+            print(f"Receive-only MIDI enabled: source_uid={args.midi_source_uid} channel={args.midi_channel}")
         print("Connected. Type 'help' for controls; generation is stopped until 'play'.")
         while not shutdown.is_set():
             line = await _readline("lyria> ", shutdown)
@@ -164,6 +185,10 @@ async def _run(args: argparse.Namespace) -> None:
             except (ValueError, RuntimeError) as exc:
                 print(f"error: {exc}")
     finally:
+        if "midi_task" in locals() and midi_task is not None:
+            midi_task.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await midi_task
         await provider.close()
         audio.close()
         for sig in (signal.SIGINT, signal.SIGTERM):
