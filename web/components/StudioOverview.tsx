@@ -6,7 +6,7 @@ import { formatWhen, loadStudioState, type StudioState } from "../lib/studio";
 
 const EMPTY: StudioState = {
   computers: [], software: [], plugins: [], endpoints: [],
-  connections: [], observations: [], gear: [], documents: [],
+  connections: [], observations: [], gear: [], documents: [], document_entities: [],
 };
 
 function Status({ children, kind = "unknown" }: { children: React.ReactNode; kind?: string }) {
@@ -51,6 +51,7 @@ export function StudioOverview({ client }: { client: SupabaseClient }) {
       <Metric value={state.endpoints.length} label="observed endpoints" />
       <Metric value={state.connections.length} label="recorded routes" />
       <Metric value={state.documents.length} label="knowledge sources" />
+      <Metric value={state.document_entities.length} label="graph edges" />
     </div>
     <section className="card topology-card">
       <div className="section-head">

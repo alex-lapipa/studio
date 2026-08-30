@@ -29,6 +29,7 @@ export function SystemPanel({ client }: { client: SupabaseClient }) {
         <div className="state-row"><span>Observed endpoints</span><b>{state.endpoints.length}</b></div>
         <div className="state-row"><span>Recorded connections</span><b>{state.connections.length}</b></div>
         <div className="state-row"><span>Observations</span><b>{state.observations.length}</b></div>
+        <div className="state-row"><span>Document graph edges</span><b>{state.document_entities.length}</b></div>
       </section>
     </div>
     <section className="card">

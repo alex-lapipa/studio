@@ -42,7 +42,7 @@ export function EvidenceBrain({ client, url, anon }: { client: SupabaseClient; u
     try {
       const r = await fetch(`${url}/functions/v1/kb`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${anon}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${(await client.auth.getSession()).data.session?.access_token || anon}`, "Content-Type": "application/json" },
         body: JSON.stringify({ action: "search", query: q, match_count: 10 }),
       });
       const j = await r.json();

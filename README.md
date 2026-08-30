@@ -1,6 +1,6 @@
 # studio — ALEX & ANTAINE MUSIC STUDIO
 
-Knowledge base, RAG pipeline and (soon) intelligent management tooling for a hardware electronic-music studio. Personal project: experiment, enjoy, make music.
+Evidence-first knowledge base, hybrid RAG, studio-state graph and read-only production dashboard for a hardware/electronic-music studio. Personal project: experiment, enjoy, make music.
 
 ## The studio
 
@@ -41,7 +41,7 @@ Supabase project klbzvbwudekstddlgnjy
 
 ## Deployment
 
-**Vercel project:** `prj_qhdWNQ96bitwujT7iK3O6ksdQKy5` (added 2026-07-24) — target for the live KB search dashboard / studio front-end. Deploys from this repo on merge to `main` once wired.
+**Vercel project:** `studio` under the `la-pipa-is-la-pipa` scope. Production domain: `https://www.zetazeta.xyz`. The web dashboard is deployed from `web/`; verify the linked project and production deployment after each release.
 
 ## Query the knowledge base
 
@@ -78,7 +78,7 @@ Auth: set `SUPABASE_ANON_KEY` in the environment (see `.env.example`).
 - **Secrets stay in the Vault** — the GitHub PAT is read server-side by `gh-sync`; it never appears in code, env files, or client context.
 - **No copyrighted PDFs in git** — manuals live in private Storage buckets; this repo carries only original code and research.
 - **Confidence-flagged research** — dossiers mark every claim [certain]/[reported]/[community-sourced]; unverifiable facts are listed as unverified, never guessed.
-- **Corpus is the rulebook** — the KB grounds every configuration answer; next tier is a Studio MCP server that uses it to operate the rig (MIDI routing, SysEx backup, generative sessions via the MRCC).
+- **Evidence is the rulebook** — RAG evidence, structured observations and graph edges remain distinct. The production web surface is read-only with respect to studio hardware; hardware control belongs in explicit local workflows after routes are observed.
 
 ## Companion repos (forks under alex-lapipa)
 

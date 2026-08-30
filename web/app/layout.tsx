@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ANTAINE STUDIO",
-  description: "Studio brain, MIDI console and docs — Alex & Antaine Music Studio",
+  description: "Evidence-first studio brain, read-only MIDI state and knowledge — Alex & Antaine Music Studio",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

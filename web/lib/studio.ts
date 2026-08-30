@@ -9,12 +9,13 @@ export type StudioState = {
   observations: any[];
   gear: any[];
   documents: any[];
+  document_entities: any[];
 };
 
 export async function loadStudioState(sb: SupabaseClient): Promise<StudioState> {
   const tables = [
     "computers", "software", "plugins", "endpoints",
-    "connections", "observations", "gear", "documents",
+    "connections", "observations", "gear", "documents", "document_entities",
   ] as const;
   const results = await Promise.all(tables.map((table) => sb.from(table).select("*")));
   const failed = results.find((r) => r.error);
