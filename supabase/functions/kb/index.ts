@@ -23,6 +23,11 @@ Deno.serve(async (req: Request) => {
     return new Response(null, { status: 204, headers: CORS });
   }
   try {
+    if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
+    const authorization = req.headers.get("Authorization") || "";
+    const token = authorization.replace(/^Bearer\s+/i, "");
+    const { data: auth, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !auth.user) return json({ error: "authenticated studio session required" }, 401);
     const body = await req.json();
     const action = body.action;
 
@@ -59,11 +64,13 @@ Deno.serve(async (req: Request) => {
 
     if (action === "search") {
       const { query, match_count = 8, filter_gear = null } = body;
-      const query_embedding = await embed(query);
+      if (typeof query !== "string" || !query.trim()) return json({ error: "query required" }, 400);
+      const query_embedding = await embed(query.slice(0, 4000));
+      const safeMatchCount = Math.min(Math.max(Number(match_count) || 8, 1), 20);
       const { data, error } = await supabase.rpc("search_knowledge", {
         query_text: query,
         query_embedding,
-        match_count,
+        match_count: safeMatchCount,
         filter_gear,
       });
       if (error) throw error;
@@ -81,7 +88,7 @@ Deno.serve(async (req: Request) => {
       const overlap = body.overlap ?? 200;
       const OVERFLOW_BASE = 100000;
       const dryRun = body.dry_run === true;
-      const maxRows = body.max_rows ?? 4; // stay under the edge CPU ceiling per call
+      const maxRows = Math.min(Math.max(Number(body.max_rows) || 4, 1), 10); // bound edge CPU work per call
 
       const { data: over, error: selErr } = await supabase
         .from("chunks")

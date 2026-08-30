@@ -133,3 +133,6 @@ a { color: var(--accent2); }
 .structured-list { display:grid; gap:8px; }
 .structured-row { display:grid; grid-template-columns:90px 1fr; gap:10px; align-items:start; padding:8px 0; border-top:1px solid var(--border); }
 .structured-row:first-child { border-top:0; }.structured-row strong { font-size:12px; }.structured-row p { color:var(--dim); font-size:11px; line-height:1.4; margin-top:2px; }
+.link-button { background:none; border:0; padding:0; color:var(--accent2); cursor:pointer; font:inherit; }
+button:focus-visible,input:focus-visible,select:focus-visible { outline:2px solid var(--accent2); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition:none !important; animation:none !important; } }

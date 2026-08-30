@@ -24,7 +24,7 @@ export function KnowledgePanel({ client, url, anon }: { client: SupabaseClient; 
     if (!d.source_bucket || !d.source_path) return;
     const r = await fetch(`${url}/functions/v1/kb`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${anon}`, "Content-Type": "application/json" },
+      headers: { Authorization: `Bearer ${(await client.auth.getSession()).data.session?.access_token || anon}`, "Content-Type": "application/json" },
       body: JSON.stringify({ action: "sign", bucket: d.source_bucket, paths: [d.source_path], expires_in: 600 }),
     });
     const j = await r.json();

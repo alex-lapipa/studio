@@ -17,7 +17,7 @@ const SUPABASE_ANON =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsYnp2Ynd1ZGVrc3RkZGxnbmp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MTA5NTksImV4cCI6MjEwMDQ4Njk1OX0.RMmiWyiYA0f26JIcK8VgfD_gdJNesjC2UH3ero4TrEY";
 
-const STUDIO_LOGIN_EMAIL = "alex@rmtv.io"; // fixed studio account; password is the shared gate
+const STUDIO_LOGIN_EMAIL = process.env.NEXT_PUBLIC_STUDIO_LOGIN_EMAIL || "alex@rmtv.io";
 
 let _sb: SupabaseClient | null = null;
 function sb(): SupabaseClient {
@@ -72,14 +72,14 @@ function Studio() {
     <div className="shell">
       <header className="top">
         <h1 className="logo">ANTAINE<span>·</span>STUDIO</h1>
-        <span className="tag">MRCC-centred · KB {new Date().getFullYear()} · <a style={{cursor:"pointer"}} onClick={() => sb().auth.signOut()}>log out</a></span>
+        <span className="tag">evidence-first · KB {new Date().getFullYear()} · <button className="link-button" onClick={() => sb().auth.signOut()}>log out</button></span>
       </header>
       <nav className="tabs">
         <button className={tab === "overview" ? "on" : ""} onClick={() => setTab("overview")}>Studio Overview</button>
         <button className={tab === "rig" ? "on" : ""} onClick={() => setTab("rig")}>Rig</button>
         <button className={tab === "software" ? "on" : ""} onClick={() => setTab("software")}>Mac & Software</button>
         <button className={tab === "brain" ? "on" : ""} onClick={() => setTab("brain")}>Studio Brain</button>
-        <button className={tab === "midi" ? "on" : ""} onClick={() => setTab("midi")}>MIDI Console</button>
+        <button className={tab === "midi" ? "on" : ""} onClick={() => setTab("midi")}>MIDI State</button>
         <button className={tab === "docs" ? "on" : ""} onClick={() => setTab("docs")}>Docs</button>
         <button className={tab === "system" ? "on" : ""} onClick={() => setTab("system")}>System</button>
       </nav>
