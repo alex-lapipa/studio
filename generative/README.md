@@ -17,6 +17,9 @@ Google's current Lyria documentation contains two material inconsistencies. Firs
 ## Safety
 No API credentials belong in this repository. Do not encode MRCC routes until they are physically observed and verified.
 
+## Authentication
+Set `GEMINI_API_KEY` in the shell that launches the bridge. `GOOGLE_API_KEY` is accepted as a fallback. If both are present, the studio bridge deliberately prefers `GEMINI_API_KEY`. Never commit either key.
+
 ## Local commands
 ```bash
 cd generative
