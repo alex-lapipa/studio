@@ -20,6 +20,9 @@ class MidiConfigMapping:
 # Keep this deliberately small until each control is independently identified.
 SAFE_MINILAB_MAPPINGS = {
     74: MidiConfigMapping(cc=74, field="brightness", low=0.0, high=1.0),
+    71: MidiConfigMapping(cc=71, field="density", low=0.0, high=1.0),
+    76: MidiConfigMapping(cc=76, field="guidance", low=0.0, high=6.0),
+    93: MidiConfigMapping(cc=93, field="temperature", low=0.0, high=3.0),
 }
 
 

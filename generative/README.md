@@ -30,3 +30,24 @@ Multiple initial weighted prompts are supported by repeating `--prompt WEIGHT:TE
 Configuration fields supported by `set NAME VALUE`: `guidance`, `bpm`, `density`, `brightness`, `temperature`, `top_k`, `seed`, `scale`, `music_generation_mode`, `mute_bass`, `mute_drums`, `only_bass_and_drums`.
 
 BPM and scale updates send the complete configuration first, then call `reset_context()` as required by Google's current RealTime documentation. Other configuration updates do not reset context.
+
+## MiniLab 3 live control (PR #4)
+
+The Lyria listener is **receive-only CoreMIDI** and is designed to coexist with the native Arturia/Analog Lab setup. It does not alter Arturia factory mappings, transmit MIDI, or involve MRCC. On the synchronized MiniLab capture, channel 1 emitted CC74, CC71, CC76, CC93, CC77, CC18, CC16, CC19, CC82, and CC83. The conservative Lyria map enables only four observed CCs:
+
+| CC | Lyria parameter | Range |
+| --- | --- | --- |
+| 74 | `brightness` | 0.0..1.0 |
+| 71 | `density` | 0.0..1.0 |
+| 76 | `guidance` | 0.0..6.0 |
+| 93 | `temperature` | 0.0..3.0 |
+
+The exact physical knob identity for these CCs still needs in-session confirmation, so the remaining observed CCs stay ignored. CLI and MIDI configuration writes are serialized and start from the latest provider-acknowledged config, preventing one control path from overwriting newer values from the other.
+
+Example using the previously observed MiniLab source UID:
+
+```bash
+uv run studio-generative run --output "Scarlett 2i2 USB" --prompt "1:minimal techno" --midi-source-uid -1941136562 --midi-channel 1
+```
+
+Re-enumerate CoreMIDI and update the UID if macOS changes it after reconnect/reboot. Generation remains stopped until `play`.

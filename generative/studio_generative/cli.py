@@ -91,13 +91,24 @@ def _status_json(provider: LyriaProvider, audio: CoreAudioOutput) -> str:
     return json.dumps({"provider": provider_status, "audio": audio.status_snapshot()}, indent=2, sort_keys=True)
 
 
-async def _midi_control_loop(provider: LyriaProvider, config: MusicConfig, source_uid: int, channel: int) -> None:
+async def _set_config_serialized(
+    provider: LyriaProvider, lock: asyncio.Lock, field: str, value: str
+) -> MusicConfig:
+    async with lock:
+        # provider.config is the authoritative latest acknowledged state. This prevents
+        # CLI and MIDI updates from overwriting each other with stale task-local copies.
+        return await apply_config_value(provider, provider.config, field, value)
+
+
+async def _midi_control_loop(
+    provider: LyriaProvider, source_uid: int, channel: int, config_lock: asyncio.Lock
+) -> None:
     async for event in receive_cc(source_uid, channel):
         mapped = map_cc(event.cc, event.value)
         if mapped is None:
             continue
         field, value = mapped
-        config = await apply_config_value(provider, config, field, str(value))
+        await _set_config_serialized(provider, config_lock, field, str(value))
         print(f"\n[midi] cc={event.cc} {field}={value:.3f}")
 
 
@@ -127,6 +138,7 @@ async def _run(args: argparse.Namespace) -> None:
     audio = CoreAudioOutput(args.output, buffer_seconds=args.buffer_seconds)
     provider = LyriaProvider(api_key)
     shutdown = asyncio.Event()
+    config_lock = asyncio.Lock()
     loop = asyncio.get_running_loop()
     for sig in (signal.SIGINT, signal.SIGTERM):
         with contextlib.suppress(NotImplementedError):
@@ -143,7 +155,7 @@ async def _run(args: argparse.Namespace) -> None:
         midi_task = None
         if args.midi_source_uid is not None:
             midi_task = asyncio.create_task(
-                _midi_control_loop(provider, config, args.midi_source_uid, args.midi_channel),
+                _midi_control_loop(provider, args.midi_source_uid, args.midi_channel, config_lock),
                 name="coremidi-control",
             )
             print(f"Receive-only MIDI enabled: source_uid={args.midi_source_uid} channel={args.midi_channel}")
@@ -177,7 +189,7 @@ async def _run(args: argparse.Namespace) -> None:
                     for prompt in provider.prompts:
                         print(f"{prompt.weight:g}: {prompt.text}")
                 elif command == "set" and len(parts) == 3:
-                    config = await apply_config_value(provider, config, parts[1], parts[2])
+                    config = await _set_config_serialized(provider, config_lock, parts[1], parts[2])
                 elif command == "status":
                     print(_status_json(provider, audio))
                 else:
