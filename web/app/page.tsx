@@ -10,8 +10,9 @@ import { SoftwarePanel } from "../components/SoftwarePanel";
 import { KnowledgePanel } from "../components/KnowledgePanel";
 import { MidiPanel } from "../components/MidiPanel";
 
+// Supabase anon keys are public client configuration; RLS and authenticated sessions protect studio data.
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://klbzvbwudekstddlgnjy.supabase.co";
-const SUPABASE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6ImtsYnp2Ynd1ZGVrc3RkZGxnbmp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MTA5NTksImV4cCI6MjEwMDQ4Njk1OX0.RMmiWyiYA0f26JIcK8VgfD_gdJNesjC2UH3ero4TrEY";
+const SUPABASE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsYnp2Ynd1ZGVrc3RkZGxnbmp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MTA5NTksImV4cCI6MjEwMDQ4Njk1OX0.RMmiWyiYA0f26JIcK8VgfD_gdJNesjC2UH3ero4TrEY";
 const STUDIO_LOGIN_EMAIL = process.env.NEXT_PUBLIC_STUDIO_LOGIN_EMAIL || "alex@rmtv.io";
 
 let _sb: SupabaseClient | null = null;
