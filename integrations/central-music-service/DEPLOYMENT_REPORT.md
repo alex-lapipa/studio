@@ -40,3 +40,15 @@ ANTAINE·STUDIO was updated to version 0.77.2 with hosted-connection operating i
 - Existing websites, Vercel deployments, Studio RAG, YouTube and hardware routing were not changed.
 
 Source and operation details are in README.md. The archive contains no credentials or private runtime configuration.
+
+
+## YouTube setup extension — current state
+
+- Bubbles is enabled as its own central TIDAL client and references BUBBLEZ. Its backend secrets are installed in the Bubbles Supabase project.
+- `music-youtube-sync` version 2 is deployed in the existing Lawton Google integration host; its Google client secret remains server-side in its original environment. The Bubbles grant is separate and encrypted.
+- OAuth was attempted, but exact channel validation rejected the selected account/channel. No YouTube grant was stored. No plan or playlist was created.
+- Matching is disabled until explicit permission is provided to send BUBBLEZ track titles and artist names to Google/YouTube. A synthetic request confirmed HTTP 403 while disabled; unauthenticated calls return HTTP 401.
+- Both function type checks and eight Deno tests pass. Five existing Python tests and compilation also passed. YouTube matching and publication are not yet end-to-end verified because Google consent is outstanding.
+- Source is committed locally on feat/central-music-youtube-sync-20261108. No GitHub push, PR or Vercel deployment ran. Automatic approval review blocked publication to the existing public repository; an explicit source-publication decision is required.
+- Automatic review rejected a temporary Google-client-secret export endpoint. It was never deployed. Its unused temporary key was removed. The deployed approach keeps the secret in the existing integration host.
+- Shopify identity was confirmed. Products, pricing, fulfilment and storefronts were not changed.
