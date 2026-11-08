@@ -24,6 +24,7 @@ Deno.serve(async(req:Request)=>{
   if(!b||typeof b!=='object'||typeof b.action!=='string')throw new SyncError(400,'invalid_request');
   const actions=['status','oauth_start','oauth_exchange','match','save_plan','approve_plan','apply_batch'];
   if(!actions.includes(b.action))throw new SyncError(400,'invalid_action');
+  if(b.action==='match'&&env('MUSIC_MATCHING_ENABLED')!=='true')throw new SyncError(403,'matching_metadata_consent_required');
   if(b.action==='status')return json({channelId:CHANNEL,sourcePlaylist:SOURCE,clientConfigured:Boolean(env('YOUTUBE_CLIENT_SECRET')),connected:Boolean(await load('youtube:bubbles')),publishingRequiresApprovedPlan:true,mode:'additions-only'});
   const id=crypto.randomUUID();if(await rpc('music_youtube_lock',{p_lease:id})!==true)throw new SyncError(429,'sync_busy');lease=id;
   if(b.action==='oauth_start'){
