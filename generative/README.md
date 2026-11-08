@@ -33,3 +33,6 @@ Multiple initial weighted prompts are supported by repeating `--prompt WEIGHT:TE
 Configuration fields supported by `set NAME VALUE`: `guidance`, `bpm`, `density`, `brightness`, `temperature`, `top_k`, `seed`, `scale`, `music_generation_mode`, `mute_bass`, `mute_drums`, `only_bass_and_drums`.
 
 BPM and scale updates send the complete configuration first, then call `reset_context()` as required by Google's current RealTime documentation. Other configuration updates do not reset context.
+
+## Hosting boundary
+This package is a Mac-local real-time audio engine, not a Python HTTP application. Git-triggered Vercel deployments are disabled for this directory. The cloud Studio dashboard deploys from web/; Python and generative engine checks remain in CI. No audio or hardware runtime is moved to Vercel.

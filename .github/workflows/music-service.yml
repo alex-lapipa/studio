@@ -19,3 +19,5 @@ jobs:
       - run: deno test --config integrations/central-music-service/supabase/functions/music-tidal/deno.json integrations/central-music-service/supabase/functions/music-tidal/core_test.ts
       - run: deno check --config integrations/central-music-service/supabase/functions/music-youtube-sync/deno.json integrations/central-music-service/supabase/functions/music-youtube-sync/index.ts
       - run: deno test --config integrations/central-music-service/supabase/functions/music-youtube-sync/deno.json integrations/central-music-service/supabase/functions/music-youtube-sync/core_test.ts
+      - run: deno check --config integrations/central-music-service/supabase/functions/music-hub/deno.json integrations/central-music-service/supabase/functions/music-hub/index.ts
+      - run: deno test --config integrations/central-music-service/supabase/functions/music-hub/deno.json integrations/central-music-service/supabase/functions/music-hub/handler_test.ts

@@ -4,3 +4,6 @@ verify_jwt = false
 
 [functions.music-youtube-sync]
 verify_jwt = false
+
+[functions.music-hub]
+verify_jwt = true

@@ -6,7 +6,7 @@ One private, read-only TIDAL OAuth grant, hosted in Studio's Supabase project. S
 
 `POST https://klbzvbwudekstddlgnjy.supabase.co/functions/v1/music-tidal`
 
-Server callers send `x-music-key` with their own project credential. A signed-in Studio owner can instead send their Supabase user JWT in `Authorization: Bearer ...`. Service keys and TIDAL tokens must never enter frontend bundles, chat, source control or logs. Browser-origin requests are intentionally rejected; use a server route.
+Server callers send `x-music-key` with their own project credential. A signed-in Studio owner can instead send their Supabase user JWT in `Authorization: Bearer ...`. Service keys and TIDAL tokens must never enter frontend bundles, chat, source control or logs. Direct browser-origin requests to music-tidal are intentionally rejected. The authenticated Studio Music panel uses the owner-only music-hub gateway, which validates the Studio session before forwarding reads.
 
 Request examples (credentials omitted):
 
@@ -55,3 +55,7 @@ Disable one client in `music_private.clients` to revoke that backend. Disable a 
 
 
 For Bubbles YouTube authorisation and review-first playlist mirroring, read YOUTUBE_SYNC.md. The TIDAL and YouTube functions deploy to different existing projects; specify the project explicitly.
+
+## Studio dashboard gateway
+
+The Music tab uses `music-hub` with the existing Studio user session. Deploy that function to Studio with JWT verification enabled and configure its owner ID and scoped YouTube operator credential server-side. The gateway exposes TIDAL reads and YouTube connection status only; publication remains in the reviewed operator workflow. See `../../docs/studio_cloud_consolidation_20261108.md` for deployment boundaries.
