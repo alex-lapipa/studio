@@ -1,4 +1,4 @@
-import {CHANNEL,SOURCE,CLIENT,REDIRECT,SCOPE,SyncError,score,entries,prefixMatches,digest,limitedJson} from './core.ts';
+import {CHANNEL,SOURCE,CLIENT,REDIRECT,SCOPE,SyncError,score,entries,prefixMatches,digest,limitedJson,playlistVideos} from './core.ts';
 const env=(k:string)=>Deno.env.get(k)||'';
 const base=env('SUPABASE_URL'),key=JSON.parse(env('SUPABASE_SECRET_KEYS')||'{}').default||env('SUPABASE_SERVICE_ROLE_KEY');
 const dbheaders:Record<string,string>={apikey:key,'Content-Type':'application/json'};
@@ -84,9 +84,7 @@ Deno.serve(async(req:Request)=>{
   }
   const meta=await google('playlists?part=snippet&id='+encodeURIComponent(plan.playlistId));
   if(meta.items?.[0]?.snippet.channelId!==CHANNEL)throw new SyncError(403,'wrong_playlist_owner');
-  const current=await google('playlistItems?part=snippet&maxResults=50&playlistId='+encodeURIComponent(plan.playlistId));
-  if(current.nextPageToken)throw new SyncError(409,'playlist_exceeds_batch_limit');
-  const actual=(current.items||[]).map((x:any)=>x.snippet.resourceId.videoId);
+  const actual=await playlistVideos(google,plan.playlistId);
   if(!prefixMatches(plan.entries,actual))throw new SyncError(409,'playlist_changed_manual_review_required');
   let added=0;
   for(const item of plan.entries.slice(actual.length,actual.length+5)){

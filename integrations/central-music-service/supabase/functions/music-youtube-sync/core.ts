@@ -30,3 +30,24 @@ export async function limitedJson(req:Request,max=32768){
  const data=new Uint8Array(size);let offset=0;for(const p of parts){data.set(p,offset);offset+=p.length;}
  try{return JSON.parse(new TextDecoder().decode(data));}catch{throw new SyncError(400,'invalid_json');}
 }
+
+// Read every page before reconciliation; a later-page edit must also block writes.
+type PlaylistPage={items?:{snippet?:{resourceId?:{videoId?:string}}}[];nextPageToken?:string};
+export async function playlistVideos(get:(path:string)=>Promise<PlaylistPage>,playlistId:string){
+ const actual:string[]=[];let pageToken='';const seen=new Set<string>();
+ for(let page=0;page<3;page++){
+  const params=new URLSearchParams({part:'snippet',maxResults:'50',playlistId});
+  if(pageToken)params.set('pageToken',pageToken);
+  const result=await get('playlistItems?'+params);
+  for(const item of result.items||[]){
+   const id=item.snippet?.resourceId?.videoId;
+   if(typeof id!=='string')throw new SyncError(409,'playlist_changed_manual_review_required');
+   actual.push(id);
+   if(actual.length>100)throw new SyncError(409,'playlist_changed_manual_review_required');
+  }
+  if(!result.nextPageToken)return actual;
+  if(seen.has(result.nextPageToken))throw new SyncError(502,'invalid_youtube_pagination');
+  pageToken=result.nextPageToken;seen.add(pageToken);
+ }
+ throw new SyncError(409,'playlist_changed_manual_review_required');
+}
