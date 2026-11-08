@@ -22,7 +22,7 @@ Deno.serve(async(req:Request)=>{
   if(!configured||req.headers.get('x-music-operator')!==configured)return json({error:'unauthorized'},401);
   const b=await limitedJson(req);
   if(!b||typeof b!=='object'||typeof b.action!=='string')throw new SyncError(400,'invalid_request');
-  const actions=['status','oauth_start','oauth_exchange','match','save_plan','approve_plan','apply_batch'];
+  const actions=['status','oauth_start','oauth_exchange','match','save_plan','approve_plan','inspect_plan','apply_batch'];
   if(!actions.includes(b.action))throw new SyncError(400,'invalid_action');
   if(b.action==='match'&&env('MUSIC_MATCHING_ENABLED')!=='true')throw new SyncError(403,'matching_metadata_consent_required');
   if(b.action==='status')return json({channelId:CHANNEL,sourcePlaylist:SOURCE,clientConfigured:Boolean(env('YOUTUBE_CLIENT_SECRET')),connected:Boolean(await load('youtube:bubbles')),publishingRequiresApprovedPlan:true,mode:'additions-only'});
@@ -69,6 +69,14 @@ Deno.serve(async(req:Request)=>{
   }
   if(typeof b.planHash!=='string'||!/^[a-f0-9]{64}$/.test(b.planHash))throw new SyncError(400,'invalid_plan_hash');
   const plan=await load('plan:'+b.planHash);if(!plan||plan.channel!==CHANNEL||plan.source!==SOURCE)throw new SyncError(404,'plan_not_found');
+  if(b.action==='inspect_plan'){
+   if(!plan.playlistId)return json({planHash:b.planHash,approved:Boolean(plan.approved),created:false,entries:plan.entries.length});
+   const result=await google('playlists?part=snippet,status,contentDetails&id='+encodeURIComponent(plan.playlistId));
+   const item=result.items?.[0];
+   const ownerVerified=item?.snippet?.channelId===CHANNEL;
+   const actual=ownerVerified?await playlistVideos(google,plan.playlistId):[];
+   return json({planHash:b.planHash,approved:Boolean(plan.approved),playlistId:plan.playlistId,found:Boolean(item),ownerVerified,observedChannel:item?.snippet?.channelId||null,title:item?.snippet?.title||null,privacy:item?.status?.privacyStatus||null,expected:plan.entries.length,actual:ownerVerified?actual:null,prefixMatches:ownerVerified&&prefixMatches(plan.entries,actual),complete:ownerVerified&&actual.length===plan.entries.length&&prefixMatches(plan.entries,actual)});
+  }
   if(b.action==='approve_plan'){
    if(b.confirm!==true)throw new SyncError(400,'explicit_confirmation_required');
    plan.approved=true;plan.approvedAt=new Date().toISOString();await store('plan:'+b.planHash,plan);return json({approved:true,planHash:b.planHash,entries:plan.entries.length});

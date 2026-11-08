@@ -21,3 +21,9 @@ The API requires the separate owner-only `x-music-operator` credential; the ordi
 ## Rollback
 
 Disable the operator credential or remove only the new function to stop sync. Revoke only the Bubbles grant when disconnecting it; do not revoke or replace the existing Lawton grant. Disable the Bubbles row in central `music_private.clients` to stop its TIDAL client. Preserve existing sites, Shopify catalogue, fulfilment and YouTube content.
+
+## Inspect a saved plan
+
+Run `node youtube-client.mjs inspect <plan-hash>` to verify a saved plan without approving it, creating a playlist or adding tracks. The response reports the observed channel, playlist visibility, ordered video IDs, whether they match the approved prefix, and completion. It never returns provider credentials. Missing or different ownership is reported without reading playlist entries; publication continues to enforce its existing channel and owner checks.
+
+The Bubbles Sheep owner consent was verified successfully. Initial BUBBLEZ publication was explicitly approved by Alex on 9 November 2026. The first immediate ownership read after playlist creation failed closed; a subsequent inspection verified the intended channel and unlisted visibility before publication resumed. No ownership check was relaxed.
