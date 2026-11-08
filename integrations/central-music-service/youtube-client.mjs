@@ -32,6 +32,7 @@ try{
  else if(command==='match'){const q=JSON.parse(await readFile(process.argv[3],'utf8'));console.log(JSON.stringify(await call({action:'match',...q}),null,2));}
  else if(command==='plan'){const p=JSON.parse(await readFile(process.argv[3],'utf8'));console.log(JSON.stringify(await call({action:'save_plan',entries:p.entries}),null,2));}
  else if(command==='approve'){if(process.argv[4]!=='--confirm-reviewed')throw new Error('Explicit reviewed-plan confirmation required');console.log(JSON.stringify(await call({action:'approve_plan',planHash:process.argv[3],confirm:true}),null,2));}
+ else if(command==='inspect')console.log(JSON.stringify(await call({action:'inspect_plan',planHash:process.argv[3]}),null,2));
  else if(command==='apply')console.log(JSON.stringify(await call({action:'apply_batch',planHash:process.argv[3]}),null,2));
  else throw new Error('Unknown command');
 }catch(e){console.error(e.message);process.exitCode=1;}
