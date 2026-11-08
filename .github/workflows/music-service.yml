@@ -1,0 +1,23 @@
+name: music-service
+on:
+  pull_request:
+    paths: ["integrations/central-music-service/**", ".github/workflows/music-service.yml"]
+  push:
+    branches: [main]
+    paths: ["integrations/central-music-service/**", ".github/workflows/music-service.yml"]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed
+        with:
+          deno-version: "2.4.3"
+      - run: deno check --config integrations/central-music-service/supabase/functions/music-tidal/deno.json integrations/central-music-service/supabase/functions/music-tidal/index.ts
+      - run: deno test --config integrations/central-music-service/supabase/functions/music-tidal/deno.json integrations/central-music-service/supabase/functions/music-tidal/core_test.ts
+      - run: deno check --config integrations/central-music-service/supabase/functions/music-youtube-sync/deno.json integrations/central-music-service/supabase/functions/music-youtube-sync/index.ts
+      - run: deno test --config integrations/central-music-service/supabase/functions/music-youtube-sync/deno.json integrations/central-music-service/supabase/functions/music-youtube-sync/core_test.ts
+      - run: deno check --config integrations/central-music-service/supabase/functions/music-hub/deno.json integrations/central-music-service/supabase/functions/music-hub/index.ts
+      - run: deno test --config integrations/central-music-service/supabase/functions/music-hub/deno.json integrations/central-music-service/supabase/functions/music-hub/handler_test.ts
